@@ -2,13 +2,9 @@ import { useState } from "react";
 import "./App.css";
 import axios from "axios";
 import { useEffect } from "react";
-/*
-product 
-id name quantity price
-c r 
-sell quantity - 1
-receiving goods + 1
-*/
+
+axios.default.baseURL = import.meta.env.PROD || "http://localhost:8080";
+
 const initProduct = {
   name: "",
   price: 0,
@@ -16,26 +12,29 @@ const initProduct = {
 const getAllProductsApi = async () => {
   const { data } = await axios({
     method: "GET",
-    url: "http://localhost:8080/api/v1/products",
+    url: "/api/v1/products",
   });
   return data;
 };
+
 const sellingApi = async (id) => {
   const { data } = await axios({
     method: "PUT",
-    url: `http://localhost:8080/api/v1/products/${id}/selling`,
+    url: `/api/v1/products/${id}/selling`,
   });
 };
+
 const receivingApi = async (id) => {
   const { data } = await axios({
     method: "PUT",
-    url: `http://localhost:8080/api/v1/products/${id}/receiving`,
+    url: `/api/v1/products/${id}/receiving`,
   });
 };
+
 const addProductApi = async (product) => {
   const { data } = await axios({
     method: "POST",
-    url: `http://localhost:8080/api/v1/products`,
+    url: `/api/v1/products`,
     data: product,
   });
 };
@@ -43,6 +42,7 @@ const addProductApi = async (product) => {
 function App() {
   const [product, setProduct] = useState({ ...initProduct });
   const [products, setProducts] = useState([]);
+
   const getAllProducts = async () => {
     const data = await getAllProductsApi();
     setProducts([...data]);
@@ -50,21 +50,25 @@ function App() {
   useEffect(() => {
     getAllProducts();
   }, []);
+
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
+
   const addProduct = (e) => {
     e.preventDefault();
     addProductApi(product);
     setProduct({ ...initProduct });
     // setProducts([...products, {...product, quantity:0, id: products.length+1}])
   };
+
   const addQuantity = (id) => {
     receivingApi(id);
     // const newProducts = products.map((el)=>el.id === id ? {...el, quantity: el.quantity+1}:el)
     // setProducts(newProducts)
   };
+
   const sellQuantity = (id) => {
     const product = products.find((el) => el.id === id && el.quantity > 0);
     if (!product) {
