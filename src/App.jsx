@@ -9,7 +9,9 @@ const initProduct = {
 };
 
 const getBaseURL = () => {
-  return import.meta.env.PROD ? location.hostname : "http://localhost:8080";
+  return import.meta.env.PROD
+    ? `http://${location.hostname}`
+    : "http://localhost:8080";
 };
 
 const getAllProductsApi = async () => {
