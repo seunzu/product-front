@@ -3,12 +3,13 @@ import "./App.css";
 import axios from "axios";
 import { useEffect } from "react";
 
-axios.default.baseURL = import.meta.env.PROD || "http://localhost:8080";
-
 const initProduct = {
   name: "",
   price: 0,
 };
+
+axios.defaults.baseURL = import.meta.env.PROD || "http://localhost:8080";
+
 const getAllProductsApi = async () => {
   const { data } = await axios({
     method: "GET",
@@ -75,7 +76,7 @@ function App() {
       alert("재고 부족");
       return;
     }
-    sellingApi(id);
+    sellingApi();
     // const newProducts = products.map((el)=>el.id === id ? {...el, quantity: el.quantity-1}:el)
     // setProducts(newProducts)
   };
